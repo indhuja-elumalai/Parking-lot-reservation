@@ -48,10 +48,11 @@ public class ReservationService {
             slotToReserve = slotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new IllegalArgumentException("Slot not found with ID: " + reservationDto.getSlotId()));
             
-            if (reservationRepository.findConflictingReservation(
+            // Corrected: Use stream().anyMatch() to check for conflicts in a List
+            if (reservationRepository.findConflictingReservationsBySlotId(
                     slotToReserve.getId(),
                     reservationDto.getStartTime(),
-                    reservationDto.getEndTime()).isPresent()) {
+                    reservationDto.getEndTime()).stream().anyMatch(r -> true)) {
                 throw new IllegalStateException("The requested slot is already reserved for this time.");
             }
         } else {
