@@ -1,30 +1,37 @@
 package com.parking.lot.reservation.dto;
 
 import com.parking.lot.reservation.enums.VehicleType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Schema(description = "Data Transfer Object for creating a new reservation")
 public class ReservationRequestDto {
 
+    @Schema(description = "The ID of the parking slot to reserve", example = "101")
     private Long slotId;
 
+    @Schema(description = "The license plate number of the vehicle", example = "KA-01-AB-1234")
     @NotBlank
     private String vehicleNumber;
 
+    @Schema(description = "The type of vehicle for the reservation", example = "CAR")
     @NotNull
     private VehicleType vehicleType;
 
+    @Schema(description = "The start time of the reservation", example = "2025-10-26T10:00:00")
     @NotNull
     @Future
     private LocalDateTime startTime;
 
+    @Schema(description = "The end time of the reservation", example = "2025-10-26T12:00:00")
     @NotNull
     @Future
     private LocalDateTime endTime;
 
-    // This is the missing field for optimistic locking
+    // This field is used for optimistic locking
     private Long version;
 
     // Getters and Setters
@@ -68,12 +75,10 @@ public class ReservationRequestDto {
         this.endTime = endTime;
     }
     
-    // This is the missing getter method
     public Long getVersion() {
         return version;
     }
 
-    // This is the missing setter method
     public void setVersion(Long version) {
         this.version = version;
     }
