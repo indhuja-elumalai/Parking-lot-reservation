@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 public class ReservationRequestDto {
 
-    // Remove the @NotNull annotation from this line
     private Long slotId;
 
     @NotBlank
@@ -24,6 +23,9 @@ public class ReservationRequestDto {
     @NotNull
     @Future
     private LocalDateTime endTime;
+
+    // This is the missing field for optimistic locking
+    private Long version;
 
     // Getters and Setters
     public Long getSlotId() {
@@ -64,5 +66,15 @@ public class ReservationRequestDto {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+    
+    // This is the missing getter method
+    public Long getVersion() {
+        return version;
+    }
+
+    // This is the missing setter method
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

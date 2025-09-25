@@ -33,4 +33,17 @@ public class Slot {
 
     @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
+
+    @Version
+    private Long version;
+
+    // Manually added getter to resolve the error.
+    public Long getVersion() {
+        return version;
+    }
+
+    // Manually added setter to resolve the error.
+    public void setVersion(Long version) {
+        this.version = version;
+    }
 }
