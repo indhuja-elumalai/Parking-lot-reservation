@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -35,9 +36,9 @@ public class ReservationService {
             throw new IllegalArgumentException("Start time must be before end time.");
         }
         
-        // Validation: Ensure reservation does not exceed 24 hours
+        // Fix: Ensure reservation does not exceed 24 hours using minutes for precision
         Duration duration = Duration.between(reservationDto.getStartTime(), reservationDto.getEndTime());
-        if (duration.toHours() > 24) {
+        if (duration.toMinutes() > 24 * 60) {
             throw new IllegalArgumentException("Reservation cannot exceed 24 hours.");
         }
 
@@ -84,12 +85,15 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
     
-    // Add these two methods back to your file
     public Reservation getReservationById(Long id) {
         return reservationRepository.findById(id).orElse(null);
     }
     
     public void cancelReservation(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 }
