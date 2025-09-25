@@ -1,5 +1,6 @@
 package com.parking.lot.reservation.controller;
 
+import com.parking.lot.reservation.dto.SlotRequestDto;
 import com.parking.lot.reservation.entity.Slot;
 import com.parking.lot.reservation.service.SlotService;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,8 @@ public class SlotController {
     }
 
     @PostMapping
-    public ResponseEntity<Slot> createSlot(@RequestBody Slot slot) {
-        return new ResponseEntity<>(slotService.createSlot(slot), HttpStatus.CREATED);
+    public ResponseEntity<Slot> createSlot(@RequestBody SlotRequestDto slotRequestDto) {
+        return new ResponseEntity<>(slotService.createSlot(slotRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping

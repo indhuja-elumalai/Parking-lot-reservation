@@ -1,7 +1,10 @@
 package com.parking.lot.reservation.service;
 
+import com.parking.lot.reservation.dto.SlotRequestDto;
 import com.parking.lot.reservation.entity.Floor;
 import com.parking.lot.reservation.entity.Slot;
+import com.parking.lot.reservation.exception.ResourceNotFoundException;
+import com.parking.lot.reservation.exception.SlotAlreadyReservedException;
 import com.parking.lot.reservation.repository.FloorRepository;
 import com.parking.lot.reservation.repository.SlotRepository;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,17 @@ public class SlotService {
         this.floorRepository = floorRepository;
     }
 
-    public Slot createSlot(Slot slot) {
-        Floor floor = floorRepository.findById(slot.getFloor().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Floor not found"));
+    public Slot createSlot(SlotRequestDto slotRequestDto) {
+        Floor floor = floorRepository.findById(slotRequestDto.getFloorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Floor not found with ID: " + slotRequestDto.getFloorId()));
+
+        if (slotRepository.findBySlotNumberAndFloor(slotRequestDto.getSlotNumber(), floor).isPresent()) {
+            throw new SlotAlreadyReservedException("Slot with number " + slotRequestDto.getSlotNumber() + " already exists on this floor.");
+        }
+
+        Slot slot = new Slot();
+        slot.setSlotNumber(slotRequestDto.getSlotNumber());
+        slot.setVehicleType(slotRequestDto.getVehicleType());
         slot.setFloor(floor);
         return slotRepository.save(slot);
     }
