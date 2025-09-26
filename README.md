@@ -101,6 +101,7 @@ The project leverages key Spring Boot capabilities and design patterns to ensure
 | Item | Status / Placeholder |
 | :--- | :--- |
 | **GitHub Repository** | https://github.com/indhuja-elumalai/Parking-lot-reservation.git |
+| **Swagger UI Documentation** | http://localhost:8080/swagger-ui/index.html |
 | **Deployed Application URL** | [INSERT RENDER / CLOUD RUN LIVE URL HERE] |
 | **Test Screenshots** | [Link to Google Drive folder with Postman/Swagger/Unit Test Screenshots] |
 ```eof
