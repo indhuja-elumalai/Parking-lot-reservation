@@ -28,14 +28,12 @@ public class FloorController {
         return ResponseEntity.ok(floorService.getAllFloors());
     }
     
-    // New method to delete a specific floor by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFloorById(@PathVariable Long id) {
         floorService.deleteFloorById(id);
         return ResponseEntity.noContent().build();
     }
     
-    // New method to delete all floors
     @DeleteMapping
     public ResponseEntity<Void> deleteAllFloors() {
         floorService.deleteAllFloors();

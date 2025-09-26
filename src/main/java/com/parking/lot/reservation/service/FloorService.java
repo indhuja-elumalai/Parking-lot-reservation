@@ -2,9 +2,11 @@ package com.parking.lot.reservation.service;
 
 import com.parking.lot.reservation.entity.Floor;
 import com.parking.lot.reservation.repository.FloorRepository;
+import com.parking.lot.reservation.exception.FloorAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FloorService {
@@ -16,6 +18,10 @@ public class FloorService {
     }
 
     public Floor createFloor(Floor floor) {
+        Optional<Floor> existingFloor = floorRepository.findByName(floor.getName());
+        if (existingFloor.isPresent()) {
+            throw new FloorAlreadyExistsException("Floor with name '" + floor.getName() + "' already exists.");
+        }
         return floorRepository.save(floor);
     }
 
@@ -23,12 +29,10 @@ public class FloorService {
         return floorRepository.findAll();
     }
     
-    // New method to delete a specific floor
     public void deleteFloorById(Long id) {
         floorRepository.deleteById(id);
     }
     
-    // New method to delete all floors
     public void deleteAllFloors() {
         floorRepository.deleteAll();
     }
