@@ -101,7 +101,7 @@ The project leverages key Spring Boot capabilities and design patterns to ensure
 | Item | Status / Placeholder |
 | :--- | :--- |
 | **GitHub Repository** | https://github.com/indhuja-elumalai/Parking-lot-reservation.git |
-| **Swagger UI Documentation** | parking-lot-reservation-production-9754.up.railway.app/swagger-ui/index.html |
-| **Deployed Application URL** | parking-lot-reservation-production-9754.up.railway.app |
+| **Swagger UI Documentation** | [parking-lot-reservation-production-9754.up.railway.app/swagger-ui/index.html](https://parking-lot-reservation-production-9754.up.railway.app/swagger-ui/index.html) |
+| **Deployed Application URL** | [parking-lot-reservation-production-9754.up.railway.app](https://parking-lot-reservation-production-9754.up.railway.app) |
 | **Test Screenshots** | https://drive.google.com/drive/folders/1aAkVUIl-nDwCzG8n2tqmryPxM1ANU46H?usp=sharing |
 ```eof
