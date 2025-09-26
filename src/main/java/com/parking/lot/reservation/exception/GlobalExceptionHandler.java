@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, SlotAlreadyReservedException.class})
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, SlotAlreadyReservedException.class, FloorAlreadyExistsException.class})
     public ResponseEntity<String> handleConflictExceptions(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }

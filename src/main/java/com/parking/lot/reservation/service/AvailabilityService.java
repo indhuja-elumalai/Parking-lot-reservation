@@ -29,16 +29,18 @@ public class AvailabilityService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Slot> findAllAvailable(LocalDateTime startTime, LocalDateTime endTime) {
+    public Page<Slot> findAvailableSlots(LocalDateTime startTime, LocalDateTime endTime, Pageable pageable) {
         List<Reservation> conflictingReservations = reservationRepository.findAllConflictingReservations(startTime, endTime);
 
         Set<Long> reservedSlotIds = conflictingReservations.stream()
                 .map(reservation -> reservation.getSlot().getId())
                 .collect(Collectors.toSet());
 
-        return slotRepository.findAll().stream()
-                .filter(slot -> !reservedSlotIds.contains(slot.getId()))
-                .collect(Collectors.toList());
+        return slotRepository.findByIdNotIn(reservedSlotIds, pageable);
+    }
+    
+    public Page<Slot> findAll(Pageable pageable) {
+        return slotRepository.findAll(pageable);
     }
 
     public Slot findAvailableSlotForVehicle(LocalDateTime startTime, LocalDateTime endTime, VehicleType vehicleType) {

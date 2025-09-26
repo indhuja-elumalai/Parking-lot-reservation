@@ -27,19 +27,26 @@ public class AvailabilityController {
 
     @GetMapping
     public ResponseEntity<Page<Slot>> getAvailableSlots(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime,
             @RequestParam(required = false) VehicleType vehicleType,
-            @PageableDefault(size = 10, page = 0, sort = "slotNumber") Pageable pageable) {
-        
-        // This is a crucial check to prevent a NullPointerException if no vehicleType is provided.
-        // The previous error was a result of Spring failing to handle the parameter conversion.
-        if (vehicleType != null) {
-            Page<Slot> availableSlots = availabilityService.getAvailableSlots(startTime, endTime, vehicleType, pageable);
-            return ResponseEntity.ok(availableSlots);
+            @PageableDefault(size = 10, page = 0, sort = "id") Pageable pageable) {
+
+        // Check if both startTime and endTime are provided for a time-based search
+        if (startTime != null && endTime != null) {
+            // If a vehicle type is also specified, perform a more specific search
+            if (vehicleType != null) {
+                Page<Slot> availableSlots = availabilityService.findAvailableSlots(startTime, endTime, vehicleType, pageable);
+                return ResponseEntity.ok(availableSlots);
+            } else {
+                // If only times are specified, find all available slots regardless of vehicle type
+                Page<Slot> availableSlots = availabilityService.findAvailableSlots(startTime, endTime, pageable);
+                return ResponseEntity.ok(availableSlots);
+            }
         } else {
-            // If no vehicleType is specified, we return an empty page to the user.
-            return ResponseEntity.ok(Page.empty(pageable));
+            // If no times are provided, return all slots with pagination and sorting
+            Page<Slot> allSlots = availabilityService.findAll(pageable);
+            return ResponseEntity.ok(allSlots);
         }
     }
 }
