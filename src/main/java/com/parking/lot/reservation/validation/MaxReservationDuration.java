@@ -12,5 +12,5 @@ public @interface MaxReservationDuration {
     String message() default "Reservation duration cannot exceed 24 hours";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-    int hours() default 24;
+    int hours() default 24; // This method is now defined and matches the validator.
 }

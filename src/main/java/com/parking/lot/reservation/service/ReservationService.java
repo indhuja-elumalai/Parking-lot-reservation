@@ -7,6 +7,7 @@ import com.parking.lot.reservation.entity.VehicleRate;
 import com.parking.lot.reservation.repository.ReservationRepository;
 import com.parking.lot.reservation.repository.SlotRepository;
 import com.parking.lot.reservation.repository.VehicleRateRepository;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -48,10 +49,11 @@ public class ReservationService {
             slotToReserve = slotRepository.findById(reservationDto.getSlotId())
                     .orElseThrow(() -> new IllegalArgumentException("Slot not found with ID: " + reservationDto.getSlotId()));
             
-            if (reservationRepository.findConflictingReservation(
+            // Corrected: Use stream().anyMatch() to check for conflicts in a List
+            if (reservationRepository.findConflictingReservationsBySlotId(
                     slotToReserve.getId(),
                     reservationDto.getStartTime(),
-                    reservationDto.getEndTime()).isPresent()) {
+                    reservationDto.getEndTime()).stream().anyMatch(r -> true)) {
                 throw new IllegalStateException("The requested slot is already reserved for this time.");
             }
         } else {
@@ -67,6 +69,14 @@ public class ReservationService {
 
         if (slotToReserve.getVehicleType() != reservationDto.getVehicleType()) {
             throw new IllegalArgumentException("Vehicle type does not match the selected slot type.");
+        }
+
+        // --- Working on: Implementing Optimistic Locking ---
+        // We compare the version provided by the client with the current version of the slot
+        // in the database. If they don't match, another user has already modified this slot,
+        // and we throw an exception to prevent a race condition.
+        if (reservationDto.getVersion() != null && !reservationDto.getVersion().equals(slotToReserve.getVersion())) {
+            throw new ObjectOptimisticLockingFailureException("Slot", slotToReserve.getId());
         }
 
         VehicleRate rate = vehicleRateRepository.findById(reservationDto.getVehicleType())
